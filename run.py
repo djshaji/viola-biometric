@@ -108,19 +108,27 @@ def drawFaces (img, x, y, w, h):
         im.save(sys.argv [1] + "-detect", "JPG")
 #faces = DeepFace.extract_faces (sys.argv [1])
 #print (faces)
+detector = "opencv"
+similarity_metrics = "cosine"
+
 if len (sys.argv) > 2:
     image = sys.argv [1]
     folder = sys.argv [2]
 if len (sys.argv) > 3:
     model = sys.argv [3]
+if len (sys.argv) > 4:
+    detector = sys.argv [4]
+if len (sys.argv) > 5:
+    similarity_metrics = sys.argv [5]
+
 
 if (image is None or folder is None):
-    exit ()
+    exit (1)
 
 from deepface import DeepFace
 
-d = DeepFace.find (image, folder, enforce_detection=False, model_name = model)
-all_faces = DeepFace.extract_faces (image, enforce_detection=False)
+d = DeepFace.find (image, folder, enforce_detection=False, model_name = model, detector_backend = detector, distance_metric = similarity_metrics)
+all_faces = DeepFace.extract_faces (image, enforce_detection=False, detector_backend = detector)
 
 im = Image.open(image)
 draw = ImageDraw.Draw(im)
@@ -133,7 +141,7 @@ fnt = ImageFont.truetype("/usr/share/fonts/julietaula-montserrat-fonts/Montserra
 for face in d:
     try:
         color = "red"
-        model_ = model + "_cosine"
+        model_ = model + "_" + similarity_metrics
         guess = face.get (model_) 
         probability = 0
         current = face.head (1)
@@ -217,3 +225,4 @@ for _student in students:
       </div></div></div>\
     ')
 print ("</section>")
+exit (0)

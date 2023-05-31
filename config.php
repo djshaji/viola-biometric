@@ -1,5 +1,4 @@
 <?php
-$FILES_JSON = json_decode (file_get_contents ("files.json"), true);
 $config = array (
     "dir"=> "/var/www/viola",
     "filesdir"=> "/var/www/viola/files",
@@ -39,13 +38,7 @@ $config = array (
   $drawer_controls = array () ;
 //  if ($uid != null)
   $config ["drawer"]["My Account"] = "/view.php?my=1" ;
-  foreach ($FILES_JSON as $name => $data) {
-    $config ["drawer"] [$name] = "/view.php?type=" . $name ;
-  }
-  
-  $config ["drawer"]["Connect Guitar to Phone"] = "/connect.php" ;
-  $config ["drawer"]["Frequently Asked Questions"] = "/faqs.php" ;
   $config ["drawer"]["About"] = "/anneli/about.php" ;
   $root_user = 'lWDjT6ENhgV9Hs6JHIjFAcacpAo1' ;
 ?>
-<script src="util.js"></script>
+<!-- <script src="util.js"></script> -->
