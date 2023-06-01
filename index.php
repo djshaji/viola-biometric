@@ -1,18 +1,41 @@
 <?php
-#ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);
+//ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);
 require ("vendor/autoload.php");
 
 chdir (__DIR__);
 include "config.php";
 include "anneli/header.php" ;
+include "anneli/db.php" ;
 include "viola.php";
+$sql = "SELECT * from classes where uid = '$uid'" ;
+$res = $db -> prepare ($sql) ;
+$res -> execute () ;
+$res = $res -> fetchAll ();
+//var_dump ($res);
+
 ?>
 <h3 class="alert alert-primary">
   Classes
 </h3>
 
 <div class="section m-3 p-3 shadow">
+  <table class="table">
+    <thead>
+      <th colspan="10">Class</th>  
+      <th></th>
+    </thead>
+    <tbody id="tbody">
+    <?php
+      foreach ($res as $row) {
+        echo "<tr>" ;
+        echo "<td><a class='nav-link' href='/class?id=" . $row ["autoid"]. "'>" . $row["name"] . "</td>" ;
+        echo "<td class='justify-content-end d-flex'><a class='btn btn-primary' href='/class.php?id=" . $row ["autoid"] . "'>View</a></td>" ;
+        echo "</tr>" ;
+      }
+      ?>
   
+   </tbody>
+  <table>  
   <div class="card-footer text-muted justify-content-center d-flex">
     <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add_class">Add Class</button>
 

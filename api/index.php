@@ -29,17 +29,41 @@ foreach($_POST as $name => $val) {
 }
 
 $_POST ["uid"] = $uid ;
+if ($_GET ["q"] != null) {
+  $query = $_GET ["q"];
+  $table = $_GET ["t"];
+}
 
+
+$RETVAL = false ;
 switch ($query) {
   case "insert":
     $statement = "INSERT into $table ($s) values ($v) ;" ;
     break ;
+  case "class":
+    $statement = "SELECT * from $table where uid = '$uid' and autoid = :autoid" ;
+//    $sql -> bindparam ("autoid", $_GET ["id"], PDO::PARAM_INT) ;
+    unset ($_GET ["q"]) ;
+    unset ($_GET ["t"]);
+    $_POST = $_GET ;
+    $RETVAL = true ;
+    break ;
 }
 
-print ($sql) ;
 $sql = $db -> prepare ($statement);
-if ($sql->execute( $_POST )) {
-  api_return (null, 200);
+
+if ($sql->execute($_POST )) {
+  if ($RETVAL) {
+    $retval = $sql -> fetch () ;
+    $json = json_encode($retval, JSON_FORCE_OBJECT);
+    print ("__CUT_HERE__");
+
+    echo $json ;
+
+  } else
+    api_return (null, 200);
+} else {
+    echo "error " . error_get_last () ;
 }
 print ("__CUT_HERE__");
 ?>
