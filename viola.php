@@ -1,4 +1,26 @@
 <?php
+function console () {
+  ?>
+<!-- Modal -->
+<div class="modal fade" id="console" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Console</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="console-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <?php
+}
+
 function spinner () {
   ?>
   <div class="d-none spinner-border text-primary spinner" role="status">
@@ -39,6 +61,7 @@ uic = document.getElementsByClassName
 function do_post (url, element) {
   document.getElementsByClassName ("spinner")[0].classList.remove ("d-none")
   document.getElementsByClassName ("check")[0].classList.add ("d-none")
+  document.getElementsByClassName ("failed")[0].classList.add ("d-none")
 
   data = {}
   console.log (`using element ${element}`)
@@ -54,10 +77,13 @@ function do_post (url, element) {
   console.log (`posting to ${url}`)
   console.log (data)
   $.post (url, data, function (result, status) {
+    document.getElementById ("console-body").innerHTML = result
+//    $("console").modal ("show")
     r = result.split ("__CUT_HERE__")[2]
     console.log (`${status}: ${r}`)
     document.getElementsByClassName ("spinner")[0].classList.add ("d-none")
 
+    if (typeof (r)== "undefined") r = '{"response":500}'
     if (JSON.parse (r) ["response"] == 200) {
       Swal.fire(
         'Ok',
@@ -80,4 +106,5 @@ function do_post (url, element) {
     }
   })
 }
+
 </script>

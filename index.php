@@ -15,6 +15,7 @@ include "viola.php";
   
   <div class="card-footer text-muted justify-content-center d-flex">
     <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add_class">Add Class</button>
+
   </div>
 </div>
 
@@ -62,9 +63,13 @@ include "anneli/footer.php";
         <input type="hidden" id="table" value="classes">
         <input type="hidden" id="query" value="insert">
         <button id="close-dialog" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button onclick="do_post ('/api/class.php', 'add_class')" type="button" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Add Class</button>
+        <button onclick="do_post ('/api/index.php', 'add_class')" type="button" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Add Class</button>
         <?php spinner () ;checkmark () ; failed ();?>
       </div>
     </div>
   </div>
 </div>
+
+<?php
+console () ;
+?>
