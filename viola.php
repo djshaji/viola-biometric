@@ -58,7 +58,7 @@ function api_return ($data, $code) {
 ui = document.getElementById
 uic = document.getElementsByClassName
 
-function do_post (url, element) {
+function do_post (url, element, callback = null) {
   document.getElementsByClassName ("spinner")[0].classList.remove ("d-none")
   document.getElementsByClassName ("check")[0].classList.add ("d-none")
   document.getElementsByClassName ("failed")[0].classList.add ("d-none")
@@ -77,6 +77,7 @@ function do_post (url, element) {
   console.log (`posting to ${url}`)
   console.log (data)
   $.post (url, data, function (result, status) {
+//    console.log (result)
     document.getElementById ("console-body").innerHTML = result
 //    $("console").modal ("show")
     r = result.split ("__CUT_HERE__")[2]
@@ -85,14 +86,18 @@ function do_post (url, element) {
 
     if (typeof (r)== "undefined") r = '{"response":500}'
     if (JSON.parse (r) ["response"] == 200) {
-      Swal.fire(
-        'Ok',
-        'Data added successfully',
-        'success'
-      ).then(() => {
-        document.getElementById ("close-dialog").click ()
-      })
-
+      if (callback == null ) {
+          Swal.fire(
+            'Ok',
+            'Data added successfully',
+            'success'
+          ).then(() => {
+            document.getElementById ("close-dialog").click ()
+          })      
+      } else {
+        callback (r) ;
+      }
+      
       document.getElementsByClassName ("check")[0].classList.remove ("d-none")
     } else {
       Swal.fire({
