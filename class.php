@@ -57,16 +57,18 @@ include "anneli/footer.php" ;
           <div class="col-2">
             <button onclick="do_post ('/api/index.php?t=students&q=get&like=1', 'add', update_list)" class="btn btn-info">Filter</button>
           </div>
-          <div class="col-2 p-2">
+          <div class="col-1 p-2">
             <?php spinner (); checkmark (); failed ();?>
           </div>
           <div class="col-2">
-            <input type="number" placeholder="From" class="form-control">
+            <input onchange="do_filter (this, true)"  type="number" placeholder="From" class="form-control">
           </div>
           <div class="col-2">
-            <input type="number" placeholder="To" class="form-control">
+            <input onchange="do_filter (this, false)" type="number" placeholder="To" class="form-control">
           </div>
-        </div>        
+          <div class="col-1">
+            <button onclick="reset_filter ()" class="btn btn-primary"><i class="fas fa-sync"></i></button>
+        </div>
         <table class="table">
           <thead>
             <th><input type="checkbox"></th>
@@ -80,7 +82,7 @@ include "anneli/footer.php" ;
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-dialog">Close</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close-dialog">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
@@ -97,8 +99,9 @@ function update_list (jdata) {
             continue
         console.log (j [key])
         tr = document.createElement ("tr")
+        tr.id = j[key]['crollno']
         tr.innerHTML = `
-            <td><input type="checkbox"></td>
+            <td><input id="input-${j[key]['rollno']}" type="checkbox"></td>
             <td><img width="150" class="img-fluid" src="${j[key]['photo']}"></td>
             <td>${j[key]["name"]}</td>
             <td>${j[key]["rollno"]}</td>
@@ -106,6 +109,33 @@ function update_list (jdata) {
        t.appendChild (tr)
     }
 }
+
+function do_filter (element, isUp) {
+    val = element.value 
+    d = document.getElementById ("add")
+    inputs = d.getElementsByTagName ("tr")
+    for (i of inputs) {
+        if (i.classList.contains ("d-none"))
+            continue
+        if ((isUp && parseInt (i.id) < val) || (!isUp && parseInt (i.id) > val))
+            i.classList.add ("d-none")
+        else 
+            i.classList.remove ("d-none")
+      
+    }
+}
+
+function reset_filter () {
+    d = document.getElementById ("add")
+    inputs = d.getElementsByTagName ("tr")
+    for (i of inputs)
+        i.classList.remove ("d-none")
+}
+
+function select_all () {
+    
+}
+
 </script>
 
 <?php
