@@ -33,21 +33,26 @@ $counter = 1 ;
 <div class="section m-3 p-3 shadow">
   <table class="table">
     <thead>
+      <th><input onchange="select_all (this, 'my-body')" type="checkbox" class="form-check-input"/></th>
       <th>S. No</th>
-      <th><input type="checkbox" class="form-check-input"/></th>
+      <th>Photo</th>
       <th>Name</th>
-      <th>Roll No</th>
       <th>University Roll No</th>
       <th>Class Roll No</th>
     </thead>
-    <tbody>
+    <tbody id='my-body'>
+      <input type="hidden" value="delete-class" id="query">
+      <input type="hidden" value="classes" id="table">
+      <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
+
       <?php foreach ($data as $row) {
 //        var_dump ($students [$row ["rollno"]]) ;
         if ($students [$row["rollno"]] == null)
           continue ;
           
-        echo "<tr><td>$counter</td>" ;
+        echo "<tr>" ;
         echo "<td><input class='form-check-input' type='checkbox' id='" . $row ["rollno"] . "'></input></td>" ;
+        echo "<td>$counter</td>";
         echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
         foreach (["name", "rollno", "crollno"] as $tag)
           echo "<td>" . $row [$tag] . "</td>" ;
@@ -59,8 +64,8 @@ $counter = 1 ;
   </table>
 
   <div class="card-footer text-muted justify-content-center d-flex">
-    <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add">Add Students</button>
-
+    <button class="m-2 btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add">Add Students</button>
+    <button class="m-2 btn btn-danger" onclick="do_post ('/api/index.php', 'my-body')" >Delete</button>
   </div>
   
 </div>
@@ -168,8 +173,8 @@ function reset_filter () {
         i.classList.remove ("d-none")
 }
 
-function select_all (el) {
-  d = document.getElementById ("add-body")
+function select_all (el, container = "add-body") {
+  d = document.getElementById (container)
   inputs = d.getElementsByTagName ("tr")
   for (i of inputs) {
     if (! i.classList.contains ("d-none"))

@@ -60,6 +60,33 @@ switch ($query) {
         $statement .= " and $key = :$key" ;
     }
     break ;
+  case "delete-class":
+    $_autoid = $_POST ["autoid"] ;
+    $_sql = "SELECT students from classes where autoid = :autoid" ;
+    $_data = array ("autoid"=>$_autoid) ;
+    $sql = $db -> prepare ($_sql);
+    if (!$sql -> execute ($_data))
+      die ('{"response":"501"}') ;
+    $res = $sql -> fetch () ;
+    if ($res == null) {
+      var_dump ($_POST) ;
+      die ("no students found") ;
+    }
+
+    $students = json_decode ($res ["students"], true) ;
+    foreach ($_POST as $key=>$val) {
+      if ($val == "false" || $val == "")
+        unset ($_POST [$key]) ;
+      else if ($val == "true") {
+        unset ($_POST [$key]) ;
+        unset ($students [$key]);
+      }
+    }
+
+    $statement = "UPDATE classes set students = :students where uid = :uid and autoid = :autoid" ;
+    $_POST ["students"] = json_encode ($students) ;
+
+    break ;
   case "add-class":
     $students = array () ;
     $_autoid = $_POST ["autoid"] ;
