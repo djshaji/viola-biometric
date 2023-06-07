@@ -1,4 +1,8 @@
 <?php
+function pic ($url) {
+  return str_replace ("http://", "/photos/", $url) ;
+}
+
 function console () {
   ?>
 <!-- Modal -->
@@ -67,17 +71,20 @@ function do_post (url, element, callback = null) {
   console.log (`using element ${element}`)
   for (tag of ["select", "input"]) {
     d = document.getElementById (element).getElementsByTagName (tag)
-    console.log (d)
+  //  console.log (d)
     for (e of d) {
-      console.log (e, e.value)
-      data [e.id] = e.value
+//      console.log (e, e.value)
+      if (e.type == "checkbox")
+        data [e.id] = e.checked
+      else
+        data [e.id] = e.value
     }
   }
 
   console.log (`posting to ${url}`)
   console.log (data)
   $.post (url, data, function (result, status) {
-//    console.log (result)
+    console.log (result)
     document.getElementById ("console-body").innerHTML = result
 //    $("console").modal ("show")
     r = result.split ("__CUT_HERE__")[2]
@@ -110,6 +117,10 @@ function do_post (url, element, callback = null) {
       document.getElementsByClassName ("failed")[0].classList.remove ("d-none")
     }
   })
+}
+
+function pic (url) {
+  return url.replace ("http://", "/photos/")
 }
 
 </script>

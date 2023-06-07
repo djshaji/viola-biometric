@@ -1,7 +1,7 @@
 <?php
 // var_dump ($_POST);
 // die () ;
-//ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);
+ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);
 chdir ("/var/www/viola");
 require ("vendor/autoload.php");
 include "config.php";
@@ -15,7 +15,7 @@ if ($uid == null) {
   api_return (null, 403);
 }
 // print ("__CUT_HERE__");
-var_dump ($_POST);
+//var_dump ($_POST);
 $query = $_POST ["query"] ;
 $table = $_POST ["table"];
 unset ($_POST ["query"]) ;
@@ -43,6 +43,7 @@ if ($_GET ["q"] != null) {
 }
 
 $RETVAL = false ;
+echo "----| DEBUG [$query : $table]" ;
 switch ($query) {
   case "insert":
     $statement = "INSERT into $table ($s) values ($v) ;" ;
@@ -58,6 +59,35 @@ switch ($query) {
       else
         $statement .= " and $key = :$key" ;
     }
+    break ;
+  case "add-class":
+    $students = array () ;
+    $_autoid = $_POST ["autoid"] ;
+    $_sql = "SELECT students from classes where autoid = :autoid" ;
+    $_data = array ("autoid"=>$_autoid) ;
+    $sql = $db -> prepare ($_sql);
+//    echo "----| fetching students [$_sql]" ;
+    if (!$sql -> execute ($_data))
+      die ('{"response":"501"}') ;
+    $res = $sql -> fetch () ;
+//    echo "----| DEBUG |------" ;
+//    var_dump ($res) ;
+    if ($res != null)
+      $students = json_decode ($res ["students"], true) ;
+
+//    var_dump ($students) ; 
+    $statement = "UPDATE classes set students = :students where uid = :uid and autoid = :autoid" ;
+    unset ($_POST ["subjects"]) ;
+
+    foreach ($_POST as $key=>$val) {
+      if ($val == "false" || $val == "")
+        unset ($_POST [$key]) ;
+      else if ($val == "true") {
+        unset ($_POST [$key]) ;
+        $students [$key] = true ;
+      }
+    }
+    $_POST ["students"] = json_encode ($students) ;
     break ;
 }
 

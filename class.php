@@ -12,8 +12,18 @@ $sql = "SELECT * from classes where uid = '$uid' and autoid = '" . $classid . "'
 $res = $db -> prepare ($sql) ;
 $res -> execute () ;
 $course_info = $res -> fetch ();
+
+$_sql = "SELECT * from students where rollno like :rollno" ;
+$_data = array ("rollno"=>$course_info ["semester"] . "%") ;
+$sql = $db -> prepare ($_sql);
+if (!$sql -> execute ($_data))
+  $data = [] ;
+$data = $sql -> fetchAll () ;
+$students = json_decode ($course_info ["students"], true) ;
+
 //echo "$sql" ;
-var_dump ($course_info);
+//var_dump ($data);
+$counter = 1 ;
 
 ?>
 <h3 class="alert alert-primary">
@@ -23,8 +33,29 @@ var_dump ($course_info);
 <div class="section m-3 p-3 shadow">
   <table class="table">
     <thead>
-      <th></th>
+      <th>S. No</th>
+      <th><input type="checkbox" class="form-check-input"/></th>
+      <th>Name</th>
+      <th>Roll No</th>
+      <th>University Roll No</th>
+      <th>Class Roll No</th>
     </thead>
+    <tbody>
+      <?php foreach ($data as $row) {
+//        var_dump ($students [$row ["rollno"]]) ;
+        if ($students [$row["rollno"]] == null)
+          continue ;
+          
+        echo "<tr><td>$counter</td>" ;
+        echo "<td><input class='form-check-input' type='checkbox' id='" . $row ["rollno"] . "'></input></td>" ;
+        echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
+        foreach (["name", "rollno", "crollno"] as $tag)
+          echo "<td>" . $row [$tag] . "</td>" ;
+        echo "</tr>";
+        $counter ++ ;
+      }
+      ?>
+    </tbody>
   </table>
 
   <div class="card-footer text-muted justify-content-center d-flex">
@@ -42,11 +73,17 @@ include "anneli/footer.php" ;
 <div class="modal fade" id="add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Students</h1>
+      <div class="modal-header container">
+        <h1 class="modal-title col fs-5" id="exampleModalLabel">Add Students</h1>
+        <div class="col align-self-end mt-2">
+          <?php spinner (); checkmark (); failed ();?>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <input type="hidden" value="add-class" id="query">
+      <input type="hidden" value="classes" id="table">
+      <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
+      <div class="modal-body" id="add-1">
         <div class="row justify-content-center">
           <div class="col-3">
             <label>Course Code</label>
@@ -55,10 +92,7 @@ include "anneli/footer.php" ;
             </select>
           </div>
           <div class="col-2">
-            <button onclick="do_post ('/api/index.php?t=students&q=get&like=1', 'add', update_list)" class="btn btn-info">Filter</button>
-          </div>
-          <div class="col-1 p-2">
-            <?php spinner (); checkmark (); failed ();?>
+            <button onclick="do_post ('/api/index.php?t=students&q=get&like=1', 'add-1', update_list)" class="btn btn-info">Filter</button>
           </div>
           <div class="col-2">
             <input onchange="do_filter (this, true)"  type="number" placeholder="From" class="form-control">
@@ -71,7 +105,7 @@ include "anneli/footer.php" ;
         </div>
         <table class="table">
           <thead>
-            <th><input type="checkbox"></th>
+            <th><input type="checkbox" class="form-check-input" onchange="select_all (this)"></th>
             <th>Photo</th>
             <th>Name</th>
             <th>Roll No</th>
@@ -83,7 +117,7 @@ include "anneli/footer.php" ;
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close-dialog">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button onclick="do_post ('/api/index.php', 'add')" type="button" class="btn btn-primary">Add Students</button>
       </div>
     </div>
   </div>
@@ -100,14 +134,16 @@ function update_list (jdata) {
         console.log (j [key])
         tr = document.createElement ("tr")
         tr.id = j[key]['crollno']
+        photo = pic (j[key]["photo"])
         tr.innerHTML = `
-            <td><input id="input-${j[key]['rollno']}" type="checkbox"></td>
-            <td><img width="150" class="img-fluid" src="${j[key]['photo']}"></td>
+            <td><input id="${j[key]['rollno']}" type="checkbox" class="form-check-input"></td>
+            <td><img width="150" class="img-fluid" src="${photo}"></td>
             <td>${j[key]["name"]}</td>
             <td>${j[key]["rollno"]}</td>
             <td>${j[key]["crollno"]}</td>`          
        t.appendChild (tr)
     }
+
 }
 
 function do_filter (element, isUp) {
@@ -132,8 +168,15 @@ function reset_filter () {
         i.classList.remove ("d-none")
 }
 
-function select_all () {
-    
+function select_all (el) {
+  d = document.getElementById ("add-body")
+  inputs = d.getElementsByTagName ("tr")
+  for (i of inputs) {
+    if (! i.classList.contains ("d-none"))
+      i.children[0].children[0].checked = el.checked
+  }
+
+
 }
 
 </script>
