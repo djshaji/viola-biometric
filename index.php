@@ -29,7 +29,8 @@ $res = $res -> fetchAll ();
       foreach ($res as $row) {
         echo "<tr>" ;
         echo "<td><a class='nav-link' href='/class?id=" . $row ["autoid"]. "'>" . $row["name"] . "</td>" ;
-        echo "<td class='justify-content-end d-flex'><a class='btn btn-primary' href='/class.php?id=" . $row ["autoid"] . "'>View</a></td>" ;
+        echo "<td class='justify-content-end d-flex'><a class='m-2 btn btn-primary' href='/class.php?id=" . $row ["autoid"] . "'><i class='fas fa-folder-open me-2'></i>View</a>" ;
+        echo "<a class='btn btn-danger m-2' href='/class.php?id=" . $row ["autoid"] . "'><i class='fas fa-trash me-2'></i>Delete this class</a></td>" ;
         echo "</tr>" ;
       }
       ?>
@@ -37,7 +38,7 @@ $res = $res -> fetchAll ();
    </tbody>
   <table>  
   <div class="card-footer text-muted justify-content-center d-flex">
-    <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add_class">Add Class</button>
+    <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add_class"><i class="fas fa-plus-circle me-2"></i>Add Class</button>
 
   </div>
 </div>

@@ -64,8 +64,8 @@ $counter = 1 ;
   </table>
 
   <div class="card-footer text-muted justify-content-center d-flex">
-    <button class="m-2 btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add">Add Students</button>
-    <button class="m-2 btn btn-danger" onclick="do_post ('/api/index.php', 'my-body')" >Delete</button>
+    <button class="m-2 btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add"><i class="fas fa-plus-circle me-2"></i>Add Students</button>
+    <button class="m-2 btn btn-danger" onclick="do_post ('/api/index.php', 'my-body')" ><i class="fas fa-trash me-2"></i>Delete</button>
   </div>
   
 </div>
@@ -97,7 +97,7 @@ include "anneli/footer.php" ;
             </select>
           </div>
           <div class="col-2">
-            <button onclick="do_post ('/api/index.php?t=students&q=get&like=1', 'add-1', update_list)" class="btn btn-info">Filter</button>
+            <button onclick="do_post ('/api/index.php?t=students&q=get&like=1', 'add-1', update_list)" class="btn btn-info"><i class="fas fa-filter me-2"></i>Filter</button>
           </div>
           <div class="col-2">
             <input onchange="do_filter (this, true)"  type="number" placeholder="From" class="form-control">
@@ -121,8 +121,8 @@ include "anneli/footer.php" ;
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close-dialog">Close</button>
-        <button onclick="do_post ('/api/index.php', 'add')" type="button" class="btn btn-primary">Add Students</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close-dialog"><i class="fas fa-times-circle me-2"></i>Close</button>
+        <button onclick="do_post ('/api/index.php', 'add')" type="button" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Add Students</button>
       </div>
     </div>
   </div>
