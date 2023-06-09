@@ -30,7 +30,13 @@ $res = $res -> fetchAll ();
         echo "<tr>" ;
         echo "<td><a class='nav-link' href='/class?id=" . $row ["autoid"]. "'>" . $row["name"] . "</td>" ;
         echo "<td class='justify-content-end d-flex'><a class='m-2 btn btn-primary' href='/class.php?id=" . $row ["autoid"] . "'><i class='fas fa-folder-open me-2'></i>View</a>" ;
-        echo "<a class='btn btn-danger m-2' href='/class.php?id=" . $row ["autoid"] . "'><i class='fas fa-trash me-2'></i>Delete this class</a></td>" ;
+        echo "<button class='btn btn-danger m-2' onclick='do_post (\"/api/index.php\", \"remove-".$row["autoid"]."\");'><i class='fas fa-trash me-2'></i>Delete this class</button></td>" ;
+        echo "<div id='remove-".$row["autoid"]. "'>" .
+          "<input type='hidden' id='autoid' value='".$row["autoid"]."'>".
+          "<input type='hidden' id='table' value='classes'>" .
+          "<input type='hidden' id='query' value='remove-class'>" .
+          "<input type='hidden' id='script' value='delete_class'></div>" ;
+          
         echo "</tr>" ;
       }
       ?>
@@ -86,6 +92,7 @@ include "anneli/footer.php";
       <div class="modal-footer">
         <input type="hidden" id="table" value="classes">
         <input type="hidden" id="query" value="insert">
+        <input type="hidden" id="script" value="create_class">
         <button id="close-dialog" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
         <button onclick="do_post ('/api/index.php', 'add_class')" type="button" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Add Class</button>
         <?php spinner () ;checkmark () ; failed ();?>

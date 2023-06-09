@@ -14,10 +14,14 @@ include "viola.php";
 if ($uid == null) {
   api_return (null, 403);
 }
+
 // print ("__CUT_HERE__");
 //var_dump ($_POST);
 $query = $_POST ["query"] ;
 $table = $_POST ["table"];
+$script = $_POST ["script"] ;
+
+unset ($_POST ["script"]) ;
 unset ($_POST ["query"]) ;
 unset ($_POST ["table"]) ;
 $s = "uid" ;
@@ -47,6 +51,13 @@ echo "----| DEBUG [$query : $table]" ;
 switch ($query) {
   case "insert":
     $statement = "INSERT into $table ($s) values ($v) ;" ;
+    break ;
+  case "remove-class":
+    $statement = "DELETE from $table where autoid = :autoid and uid = :uid" ;
+    $_POST = array (
+      "uid"=> $uid,
+      "autoid"=> $_POST ["autoid"]
+    ) ;
     break ;
   case "get":
     $statement = "SELECT * from $table where 1 " ;
@@ -120,9 +131,14 @@ switch ($query) {
 
 var_dump ($statement);
 var_dump ($_POST);
+var_dump ("script:" .$script);
 $sql = $db -> prepare ($statement);
-
 if ($sql->execute($_POST )) {
+  if (file_exists ("/var/www/viola/scripts/$script.php")) {
+    $script = str_replace ("..", "", $script) ;
+    include "/var/www/viola/scripts/$script.php" ;
+  }
+
   if ($RETVAL) {
     $retval = $sql -> fetchAll () ;
     $retval ["response"] = 200 ;

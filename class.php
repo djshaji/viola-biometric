@@ -22,6 +22,7 @@ $data = $sql -> fetchAll () ;
 $students = json_decode ($course_info ["students"], true) ;
 
 //echo "$sql" ;
+// var_dump ($students);
 //var_dump ($data);
 $counter = 1 ;
 
@@ -86,6 +87,7 @@ include "anneli/footer.php" ;
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <input type="hidden" value="add-class" id="query">
+      <input type="hidden" value="add_student" id="script">
       <input type="hidden" value="classes" id="table">
       <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
       <div class="modal-body" id="add-1">
