@@ -47,6 +47,7 @@ if ($_GET ["q"] != null) {
 }
 
 $RETVAL = false ;
+$deleted_students = [] ;
 echo "----| DEBUG [$query : $table]" ;
 switch ($query) {
   case "insert":
@@ -72,6 +73,7 @@ switch ($query) {
     }
     break ;
   case "delete-class":
+    # actually delete student from class
     $_autoid = $_POST ["autoid"] ;
     $_sql = "SELECT students from classes where autoid = :autoid" ;
     $_data = array ("autoid"=>$_autoid) ;
@@ -91,6 +93,7 @@ switch ($query) {
       else if ($val == "true") {
         unset ($_POST [$key]) ;
         unset ($students [$key]);
+        array_push ($deleted_students, $key);
       }
     }
 
@@ -99,6 +102,7 @@ switch ($query) {
 
     break ;
   case "add-class":
+    # actually add student to class
     $students = array () ;
     $_autoid = $_POST ["autoid"] ;
     $_sql = "SELECT students from classes where autoid = :autoid" ;

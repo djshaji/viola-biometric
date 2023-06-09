@@ -44,6 +44,7 @@ $counter = 1 ;
     <tbody id='my-body'>
       <input type="hidden" value="delete-class" id="query">
       <input type="hidden" value="classes" id="table">
+      <input type="hidden" value="delete_student" id="script">
       <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
 
       <?php foreach ($data as $row) {
