@@ -19,7 +19,7 @@ $sql = "SELECT * from classes where uid = '$uid' and autoid = '" . $classid . "'
 $res = $db -> prepare ($sql) ;
 $res -> execute () ;
 $course_info = $res -> fetch ();
-
+// var_dump ($course_info);
 $_sql = "SELECT * from students where rollno like :rollno" ;
 $_data = array ("rollno"=>$course_info ["semester"] . "%") ;
 $sql = $db -> prepare ($_sql);
@@ -39,25 +39,37 @@ $counter = 1 ;
 </h3>
 <div class="section">
   <div class="row m-4 p-2 shadow justify-content-center">
-    <button class="btn btn-primary col-2 m-3">
-      <i class="fas fa-camera me-2"></i>
-      Take Photo
-    </button>
+    <div class="col-2">
+      <button class="btn btn-primary">
+        <i class="fas fa-camera me-2"></i>
+        Take Photo
+      </button>
+
+    </div>
 
     <div class="form-group col-2">
-      <label class="text-muted" >Mark all as</label>
-        <select class="form-select">
-          <?php foreach ($att_values as $a) {
-            echo "<option>$a</option>";
-          }
-          ?>
-        </select>
+      <!-- <label class="text-muted" >Mark all as</label> -->
+      <select class="form-select" id="mark-all">
+        <?php foreach ($att_values as $a) {
+          $o = $a [0] ;
+          echo "<option value='$o'>$a</option>";
+        }
+        ?>
+      </select>
+    </div>
+    <div class="col-2">
+      <button class="btn btn-success" onclick="mark_all ()">
+        <i class="fas fa-edit me-2"></i>
+        Mark All
+      </button>
+
     </div>
     <div class="col-6 d-flex">
       <label for="" class="h3 align-self-center">
         <i class="fas fa-calendar-check me-2"></i>
-        <?php $date = date ("r", time()) ; echo $date;?>
+        <?php $date = date ("r", time()) ; echo explode ("+", $date) [0];?>
       </label>
+      <button class="ms-3 m-1 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body')"><i class="fas fa-save me-2"></i>Save</button>
     </div>
   </div>
 </div>
@@ -73,8 +85,13 @@ $counter = 1 ;
       </th>
     </thead>
     <tbody id='my-body'>
-      <input type="hidden" value="insert" id="query">
+      <input type="hidden" value="take" id="query">
       <input type="hidden" value="attendance" id="table">
+      <input type="hidden" value="<?php echo $date;?>" id="date">
+      <input type="hidden" value="<?php echo $course_info ["semester"] ;?>" id="semester">
+      <input type="hidden" value="<?php echo $course_info ["section"] ;?>" id="section">
+      <input type="hidden" value="<?php echo $course_info ["name"] ;?>" id="name">
+      <input type="hidden" value="<?php echo $course_info ["course"] ;?>" id="course">
       <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
 
       <?php foreach ($data as $row) {
@@ -87,9 +104,11 @@ $counter = 1 ;
         echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
         foreach (["name", "rollno", "crollno"] as $tag)
           echo "<td>" . $row [$tag] . "</td>" ;
-        print ("<td><select class='form-select'>");
+        $rollno = $row ['rollno'];
+        print ("<td><select class='form-select' id='$rollno'>");
         foreach ($att_values as $a) {
-          echo "<option>$a</option>";
+          $option = $a [0];
+          echo "<option value='$option'>$a</option>";
         }
         echo "</td></tr>";
         $counter ++ ;
@@ -99,7 +118,10 @@ $counter = 1 ;
   </table>
 
   <div class="card-footer text-muted justify-content-center d-flex">
-    <button class="m-2 btn btn-primary"  data-bs-toggle="modal" data-bs-target="#add"><i class="fas fa-plus-circle me-2"></i>Save</button>
+    <button class="m-2 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body')"><i class="fas fa-save me-2"></i>Save</button>
+    <div class="p-3">
+      <?php spinner () ;checkmark () ; failed ();?>   
+    </div>
   </div>
   
 </div>
@@ -111,3 +133,12 @@ include "anneli/footer.php" ;
 <?php
 console () ;
 ?>
+
+<script>
+function mark_all () {
+  what = document.getElementById ("mark-all").value
+  for (el of document.getElementsByTagName ("select")) {
+    el.value = what
+  }
+}
+</script>

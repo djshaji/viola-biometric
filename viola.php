@@ -27,8 +27,11 @@ function console () {
 
 function spinner () {
   ?>
-  <div class="d-none spinner-border text-primary spinner" role="status">
-    <span class="visually-hidden">Loading...</span>
+  <div class="d-none spinner row shadow p-2 justify-content-center" style="background-color:ffffff;position:fixed;right:48%;bottom:50%;width:100;height:100" >
+    <div class="spinner-border text-primary spinner" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <label class="h5">Loading</label>
   </div>
 
   <?php

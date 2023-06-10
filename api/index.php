@@ -50,6 +50,33 @@ $RETVAL = false ;
 $deleted_students = [] ;
 echo "----| DEBUG [$query : $table]" ;
 switch ($query) {
+  case "take":
+    $semester = $_POST ["semester"];
+    // die ($semester);
+    $attendance = array () ;
+    foreach ($_POST as $key=>$val) {
+      // var_dump ($key/100000000) ;
+      // die ($key);
+      if (intval (intval ($key) / 100000000) == 4) {
+        $attendance [$key] = $val ;
+        unset ($_POST [$key]);
+      }
+    }
+
+    $_POST ["students"] = json_encode ($attendance) ;
+    $_POST ["cid"] = $_POST ["autoid"] ;
+    unset ($_POST ["autoid"]);
+    $cols = ["uid", "course", "name", "semester", "section", "students", "cid", "date"];
+    $s = "uid";
+    $v = ":uid";
+    foreach ($cols as $c) {
+      if ($c == "uid")
+        continue;
+      $s .= ",$c" ;
+      $v .= ",:$c" ;
+    }
+    $statement = "INSERT into attendance ($s) values ($v) ;";
+    break ;
   case "insert":
     $statement = "INSERT into $table ($s) values ($v) ;" ;
     break ;
