@@ -38,12 +38,20 @@ $counter = 1 ;
   Semester <?php echo $course_info ["semester"] . " ". $course_info ["name"] . " " . $course_info ["course"] . " Section " . $course_info ["section"];?>
 </h3>
 <div class="section">
-  <div class="row m-4 p-2 shadow justify-content-center">
-    <div class="col-2">
-      <button class="btn btn-primary">
-        <i class="fas fa-camera me-2"></i>
-        Take Photo
-      </button>
+  <div class="row m-4 p-4 shadow justify-content-center">
+    <div class="col-12 mb-3 justify-content-center  d-flex">
+      <label for="" class="h3 align-self-center">
+        <i class="fas fa-calendar-check me-2"></i>
+        <?php $date = date ("r", time()) ; echo explode ("+", $date) [0];?>
+      </label>
+      <button class="ms-3 m-1 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body')"><i class="fas fa-save me-2"></i>Save</button>
+    </div>
+
+    <div class="col-4">
+      <div class="input-group">
+        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+        <button class="btn btn-primary" type="button" id="inputGroupFileAddon04"><i class="fas fa-camera me-2"></i>Upload</button>
+      </div>
 
     </div>
 
@@ -63,13 +71,6 @@ $counter = 1 ;
         Mark All
       </button>
 
-    </div>
-    <div class="col-6 d-flex">
-      <label for="" class="h3 align-self-center">
-        <i class="fas fa-calendar-check me-2"></i>
-        <?php $date = date ("r", time()) ; echo explode ("+", $date) [0];?>
-      </label>
-      <button class="ms-3 m-1 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body')"><i class="fas fa-save me-2"></i>Save</button>
     </div>
   </div>
 </div>
