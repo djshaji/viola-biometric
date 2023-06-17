@@ -19,7 +19,10 @@ foreach ($data as $row) {
     $photo = explode ("/Photo/", $row ["photo"])[1] ;
     $folder = "/var/www/viola/faces/$rollno/$photo" ;
     $autoid = $_POST["autoid"] ;
-    if (!symlink ($folder, "/var/www/viola/classes/$uid/$autoid/$photo")) {
+    $new_dir = "/var/www/viola/classes/$uid/$autoid/faces/$photo" ;
+    if (! file_exists (dirname ($new_dir)))
+      mkdir (dirname ($new_dir)) ;
+    if (!symlink ($folder, $new_dir)) {
       var_dump (error_get_last ());
       // die ("{'response': '502','message': 'cannot make symlink'}") ;
     }

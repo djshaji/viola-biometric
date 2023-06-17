@@ -1,5 +1,8 @@
 <?php
+//phpinfo () ;die () ;
+
 //ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);
+//ini_set ("upload_tmp_dir", "/var/www/viola/files");
 require ("vendor/autoload.php");
 $att_values = [
   "Present",
@@ -14,6 +17,7 @@ include "config.php";
 include "anneli/header.php" ;
 include "anneli/db.php" ;
 include "viola.php";
+require_login ();
 $classid = $_GET["id"] ;
 $sql = "SELECT * from classes where uid = '$uid' and autoid = '" . $classid . "'";
 $res = $db -> prepare ($sql) ;
@@ -27,17 +31,41 @@ if (!$sql -> execute ($_data))
   $data = [] ;
 $data = $sql -> fetchAll () ;
 $students = json_decode ($course_info ["students"], true) ;
-
 //echo "$sql" ;
 // var_dump ($students);
 //var_dump ($data);
 $counter = 1 ;
-
+// var_dump ($_FILES);
+$class_id = $_GET ["id"];
+$dir = "classes/$uid/$class_id/photos/";
+$_img = $_FILES ["image"]["tmp_name"];
+$img = "classes/$uid/$class_id/photos/" . time () . ".jpg";
+if (! file_exists (dirname ($img)))
+  mkdir (dirname ($img), 0777) ;
+// error_clear_last () ;
+if (!move_uploaded_file ($_img, $img)) {
+  $error = error_get_last () ;
+  print ("<div class='alert alert-danger'>Cannot move uploaded file:");
+  var_dump (error_get_last ());
+  echo "</div>";
+  die () ;
+} else {
+  // print ("<div class='alert alert-info'>$img</div>");
+}
 ?>
 <h3 class="alert alert-primary">
   Semester <?php echo $course_info ["semester"] . " ". $course_info ["name"] . " " . $course_info ["course"] . " Section " . $course_info ["section"];?>
 </h3>
 <div class="section">
+  <?php if ($img != null) { ?>
+    <div class="row justify-content-center">
+      <img src="<?php echo $img ;?>" alt="" class="col-10 img-fluid">
+      <div class="m-2 col-6 justify-content-center d-flex">
+        <button class="btn m-2 btn-primary">Detect</button>
+        <button class="btn m-2 btn-info">Recognize</button>
+      </div>
+    </div>
+  <?php } ?>
   <div class="row m-4 p-4 shadow justify-content-center">
     <div class="col-12 mb-3 justify-content-center  d-flex">
       <label for="" class="h3 align-self-center">
@@ -48,10 +76,10 @@ $counter = 1 ;
     </div>
 
     <div class="col-4">
-      <div class="input-group">
-        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-        <button class="btn btn-primary" type="button" id="inputGroupFileAddon04"><i class="fas fa-camera me-2"></i>Upload</button>
-      </div>
+      <form class="input-group" method="post" enctype="multipart/form-data" action="/take.php?id=<?php echo $_GET["id"] ;?>">
+        <input name="image" type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+        <button type="submit" class="btn btn-primary" type="button" id="inputGroupFileAddon04"><i class="fas fa-camera me-2"></i>Upload</button>
+      </form>
 
     </div>
 
