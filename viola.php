@@ -84,6 +84,27 @@ function do_post (url, element, callback = null) {
     }
   }
 
+  if ("query" in data && (data ["query"].search ("delete") != -1 || data ["query"].search ("remove") != -1 )) {
+    /*
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to undo this action.",
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonColor: '#3085d6',
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Delete'
+    }).then((result) => {
+      if (! result.isConfirmed) {
+        return 
+      }
+    })
+    */
+
+    if (! confirm ("Are you sure you want to delete?"))
+      return ;
+  }
+
   console.log (`posting to ${url}`)
   console.log (data)
   $.post (url, data, function (result, status) {

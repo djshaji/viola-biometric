@@ -30,7 +30,7 @@ $counter = 1 ;
 <h3 class="alert alert-primary">
   Semester <?php echo $course_info ["semester"] . " ". $course_info ["name"] . " " . $course_info ["course"] . " Section " . $course_info ["section"];?>
   <a href="/take.php?id=<?php echo $_GET ["id"];?>" class="btn m-2  btn-info"><i class="fas fa-clock me-2"></i>Take Attendance</a>
-  <button class="btn m-2  btn-success"><i class="fas fa-clock me-2"></i>View Attendance</button>
+  <a href="/view.php?id=<?php echo $_GET ["id"];?>" class="btn m-2  btn-success"><i class="fas fa-clock me-2"></i>View Attendance</a>
 
 </h3>
 
