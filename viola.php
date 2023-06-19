@@ -123,7 +123,11 @@ function do_post (url, element, callback = null) {
             'Data added successfully',
             'success'
           ).then(() => {
-            document.getElementById ("close-dialog").click ()
+            close_dialog_a = document.getElementById ("close-dialog")
+            if (close_dialog_a)
+              close_dialog_a.click ()
+            // else
+            //   location.reload ()
           })      
       } else {
         callback (r) ;
