@@ -37,20 +37,22 @@ $students = json_decode ($course_info ["students"], true) ;
 $counter = 1 ;
 // var_dump ($_FILES);
 $class_id = $_GET ["id"];
-$dir = "classes/$uid/$class_id/photos/";
-$_img = $_FILES ["image"]["tmp_name"];
-$img = "classes/$uid/$class_id/photos/" . time () . ".jpg";
-if (! file_exists (dirname ($img)))
-  mkdir (dirname ($img), 0777) ;
-// error_clear_last () ;
-if (!move_uploaded_file ($_img, $img)) {
-  $error = error_get_last () ;
-  print ("<div class='alert alert-danger'>Cannot move uploaded file:");
-  var_dump (error_get_last ());
-  echo "</div>";
-  die () ;
-} else {
-  // print ("<div class='alert alert-info'>$img</div>");
+if ($_FILES ["image"] != null) {
+  $dir = "classes/$uid/$class_id/photos/";
+  $_img = $_FILES ["image"]["tmp_name"];
+  $img = "classes/$uid/$class_id/photos/" . time () . ".jpg";
+  if (! file_exists (dirname ($img)))
+    mkdir (dirname ($img), 0777) ;
+  // error_clear_last () ;
+  if (!move_uploaded_file ($_img, $img)) {
+    $error = error_get_last () ;
+    print ("<div class='alert alert-danger'>Cannot move uploaded file:");
+    var_dump (error_get_last ());
+    echo "</div>";
+    die () ;
+  } else {
+    // print ("<div class='alert alert-info'>$img</div>");
+  }
 }
 ?>
 <h3 class="alert alert-primary">
@@ -58,11 +60,16 @@ if (!move_uploaded_file ($_img, $img)) {
 </h3>
 <div class="section">
   <?php if ($img != null) { ?>
+    <?php print ("<script>image = '$img';</script>") ; ?>
     <div class="row justify-content-center">
-      <img src="<?php echo $img ;?>" alt="" class="col-10 img-fluid">
+      <img id="img" src="<?php echo $img ;?>" alt="" class="col-10 img-fluid">
       <div class="m-2 col-6 justify-content-center d-flex">
-        <button class="btn m-2 btn-primary">Detect</button>
-        <button class="btn m-2 btn-info">Recognize</button>
+        <div class="d-none" id="img-data">
+          <input type="hidden" id="image" value="<?php echo $img ;?>">
+          <input type="hidden" id="folder" value="<?php echo "classes/$uid/$class_id/faces" ;?>">
+        </div>
+        <button onclick="detect_faces (false)" class="btn m-2 btn-primary">Detect</button>
+        <button onclick="detect_faces (true)" class="btn m-2 btn-info">Recognize</button>
       </div>
     </div>
   <?php } ?>
@@ -134,7 +141,7 @@ if (!move_uploaded_file ($_img, $img)) {
         foreach (["name", "rollno", "crollno"] as $tag)
           echo "<td>" . $row [$tag] . "</td>" ;
         $rollno = $row ['rollno'];
-        print ("<td><select class='form-select' id='$rollno'>");
+        print ("<td><select class='form-select' id='$rollno'><option></option>");
         foreach ($att_values as $a) {
           $option = $a [0];
           echo "<option value='$option'>$a</option>";
@@ -169,5 +176,25 @@ function mark_all () {
   for (el of document.getElementsByTagName ("select")) {
     el.value = what
   }
+}
+
+function detect_cb (data) {
+  document.getElementById ("img").setAttribute ("src", image + "-detect")
+  // console.log (data)
+  data = JSON.parse (data)
+  for (rollno in data) {
+    // print (rollno)
+    d = document.getElementById (rollno)
+    // print (d)
+    if (d != null)
+      d.value = "P"
+  }
+}
+
+function detect_faces (recognize) {
+  if (! recognize)
+    do_post ("/api/detect.py", "img-data", detect_cb)
+  else
+    do_post ("/api/recognize.py", "img-data", detect_cb)
 }
 </script>

@@ -17,6 +17,7 @@ $data = $sql -> fetchAll () ;
 foreach ($data as $row) {
   if ($students [$row["rollno"]] != null) {
     $photo = explode ("/Photo/", $row ["photo"])[1] ;
+    // $folder = "/var/www/viola/photos/$rollno/$photo" ;
     $folder = "/var/www/viola/faces/$rollno/$photo" ;
     $autoid = $_POST["autoid"] ;
     $new_dir = "/var/www/viola/classes/$uid/$autoid/faces/$photo" ;
