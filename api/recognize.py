@@ -21,7 +21,11 @@ database = 'viola'
 myConnection = MySQLdb.connect( host=hostname, user=username, passwd=password, db=database )
 cur = myConnection.cursor()
 
-sql = f"SELECT * from students where rollno like '4%'"
+semester = form.getfirst ("semester")
+if len (sys.argv) > 2:
+    semester = sys.argv [3]
+
+sql = f"SELECT * from students where rollno like '{semester}%'"
 cur.execute (sql)
 result = cur.fetchall ()
 data = dict ()
@@ -35,6 +39,7 @@ folder = form.getfirst ("folder")
 if len (sys.argv) > 1:
     image = sys.argv [1]
     folder = sys.argv [2]
+    semester = sys.argv [3]
 
 # import glob
 # print (glob.glob (folder + "/*"))
@@ -46,7 +51,7 @@ all_faces = DeepFace.extract_faces (image)
 # print (all_faces)
 im = Image.open(image)
 draw = ImageDraw.Draw(im)
-d = DeepFace.find (image, folder)
+d = DeepFace.find (image, folder, enforce_detection=False)
 model = "VGG-Face"
 detector = "opencv"
 similarity_metrics = "cosine"

@@ -12,6 +12,9 @@ $res = $db -> prepare ($sql) ;
 $res -> execute () ;
 $res = $res -> fetchAll ();
 //var_dump ($res);
+$all_courses = file_get_contents ("courses.json");
+print ("<script>all_courses = $all_courses</script>");
+$all_courses = json_decode ($all_courses, true);
 
 ?>
 <h3 class="alert alert-primary">
@@ -64,18 +67,19 @@ include "anneli/footer.php";
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body row m-3 p-3">
-        <div class="col-5">
-          <label>Course Code</label>
-          <select id="course" class="form-select col-md-5">
-            <option>UENTS-403</option>
-          </select>
-        </div>
         <div class="col-3">
           <label for="">Semester</label>
-          <select id="semester" class="form-select">
+          <select onchange="sem_select (this)" id="semester" class="form-select">
+            <option></option>
             <option>2</option>
             <option>4</option>
             <option>6</option>
+          </select>
+        </div>
+        <div class="col-5">
+          <label>Course Code</label>
+          <select id="course" class="form-select col-md-5">
+            <option></option>
           </select>
         </div>
         <div class="col-3">
@@ -104,3 +108,17 @@ include "anneli/footer.php";
 <?php
 console () ;
 ?>
+
+<script>
+function sem_select (sem) {
+  sel = document.getElementById ("course")
+  sel.innerHTML = ""
+  for (i in all_courses [sem.value]) {
+    el = document.createElement ("option")
+    el.innerText = i
+    el.value = `%${i}%`
+    sel.appendChild (el)
+  }
+}
+
+</script>

@@ -66,6 +66,7 @@ if ($_FILES ["image"] != null) {
       <div class="m-2 col-6 justify-content-center d-flex">
         <div class="d-none" id="img-data">
           <input type="hidden" id="image" value="<?php echo $img ;?>">
+          <input type="hidden" id="semester" value="<?= $course_info ["semester"] ;?>">
           <input type="hidden" id="folder" value="<?php echo "classes/$uid/$class_id/faces" ;?>">
         </div>
         <button onclick="detect_faces (false)" class="btn m-2 btn-primary">Detect</button>
@@ -186,8 +187,11 @@ function detect_cb (data) {
     // print (rollno)
     d = document.getElementById (rollno)
     // print (d)
-    if (d != null)
+    if (d != null) {
       d.value = "P"
+      d.parentElement.parentElement.classList.add ("fw-bold")
+      d.parentElement.parentElement.classList.add ("text-success")
+    }
   }
 }
 

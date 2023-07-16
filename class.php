@@ -7,8 +7,9 @@ include "config.php";
 include "anneli/header.php" ;
 include "anneli/db.php" ;
 include "viola.php";
-$all_courses = json_decode (file_get_contents ("courses.json"), true);
-
+$all_courses = file_get_contents ("courses.json");
+print ("<script>all_courses = $all_courses</script>");
+$all_courses = json_decode ($all_courses, true);
 $classid = $_GET["id"] ;
 $sql = "SELECT * from classes where uid = '$uid' and autoid = '" . $classid . "'";
 $res = $db -> prepare ($sql) ;
@@ -99,9 +100,18 @@ include "anneli/footer.php" ;
       <div class="modal-body" id="add-1">
         <div class="row justify-content-center">
           <div class="col-3">
+            <label for="">Semester</label>
+            <select onclick="sem_select (this)" class="form-select" aria-label="Default select example">
+              <option value=""></option>
+              <option value="2">2</option>
+              <option value="4">4</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+          <div class="col-3">
             <label>Course Code</label>
             <select name="course" id="subjects" class="form-select">
-              <option value='%UENTS-403%'>UENTS-403</option>
+              <!-- <option value='%UENTS-403%'>UENTS-403</option> -->
             </select>
           </div>
           <div class="col-2">
@@ -190,6 +200,17 @@ function select_all (el, container = "add-body") {
   }
 
 
+}
+
+function sem_select (sem) {
+  sel = document.getElementById ("subjects")
+  sel.innerHTML = ""
+  for (i in all_courses [sem.value]) {
+    el = document.createElement ("option")
+    el.innerText = i
+    el.value = `%${i}%`
+    sel.appendChild (el)
+  }
 }
 
 </script>

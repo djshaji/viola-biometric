@@ -76,6 +76,8 @@ function do_post (url, element, callback = null) {
     d = document.getElementById (element).getElementsByTagName (tag)
   //  console.log (d)
     for (e of d) {
+      if (e.id == "")
+        continue
 //      console.log (e, e.value)
       if (e.type == "checkbox")
         data [e.id] = e.checked
