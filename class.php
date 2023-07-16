@@ -7,6 +7,8 @@ include "config.php";
 include "anneli/header.php" ;
 include "anneli/db.php" ;
 include "viola.php";
+$all_courses = json_decode (file_get_contents ("courses.json"), true);
+
 $classid = $_GET["id"] ;
 $sql = "SELECT * from classes where uid = '$uid' and autoid = '" . $classid . "'";
 $res = $db -> prepare ($sql) ;

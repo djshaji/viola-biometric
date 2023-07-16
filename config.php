@@ -33,7 +33,7 @@ $config = array (
 //  if ($uid != null)
   $config ["drawer"]["My Account"] = "/view.php?my=1" ;
   $config ["drawer"]["About"] = "/anneli/about.php" ;
-  $root_user = 'lWDjT6ENhgV9Hs6JHIjFAcacpAo1' ;
+  $root_user = 'n1WsT98D8BWsmyMoLdJ6lSn7K9m1' ;
 
   function debug () {
     ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);    
