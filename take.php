@@ -69,8 +69,8 @@ if ($_FILES ["image"] != null) {
           <input type="hidden" id="semester" value="<?= $course_info ["semester"] ;?>">
           <input type="hidden" id="folder" value="<?php echo "classes/$uid/$class_id/faces" ;?>">
         </div>
-        <button onclick="detect_faces (false)" class="btn m-2 btn-primary">Detect</button>
-        <button onclick="detect_faces (true)" class="btn m-2 btn-info">Recognize</button>
+        <button onclick="detect_faces (false)" class="btn m-2 btn-primary"><i class="fas fa-search me-2"></i>Detect</button>
+        <button onclick="detect_faces (true)" class="btn m-2 btn-info"><i class="fas fa-fingerprint me-2"></i>Recognize</button>
       </div>
     </div>
   <?php } ?>
@@ -138,10 +138,10 @@ if ($_FILES ["image"] != null) {
           
         echo "<tr>" ;
         echo "<td>$counter</td>";
-        echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
+        $rollno = $row ['rollno'];
+        echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ><canvas width='150' height='150' id='$rollno-c'></canvas></td>" ;
         foreach (["name", "rollno", "crollno"] as $tag)
           echo "<td>" . $row [$tag] . "</td>" ;
-        $rollno = $row ['rollno'];
         print ("<td><select class='form-select' id='$rollno'><option></option>");
         foreach ($att_values as $a) {
           $option = $a [0];
@@ -179,11 +179,40 @@ function mark_all () {
   }
 }
 
+_data = null
 function detect_cb (data) {
-  document.getElementById ("img").setAttribute ("src", image + "-detect")
+  _data = data
+  img = document.getElementById ("img")
+  img_ = document.createElement ("img")
+  img_.onload = function () {
+    for (rollno in data) {
+      // console.log (data [rollno])
+      jdata = JSON.parse (data [rollno])
+      const canvas = document.getElementById(rollno + '-c');
+      if (canvas != null) {
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img_, jdata ["x"], jdata ["y"], jdata ["w"], jdata ["h"],0,0,150,150);
+        // console.log (rollno + "-c")
+        // document.getElementById (rollno + "-c").getContext ("2d").drawImage (document.getElementById ("img"), 966,485,68,68,0,0,300,300)
+      } else {
+        console.log (`console is null for ${rollno}`)
+      }
+    }
+  }
+
+  img.src = image + "-detect"
+  img_.src = image 
+  // img.setAttribute ("src", image + "-detect")
   // console.log (data)
   data = JSON.parse (data)
   for (rollno in data) {
+    // console.log (data [rollno])
+    // const canvas = document.getElementById(rollno + '-c');
+    // if (canvas != null) {
+    //   const ctx = canvas.getContext('2d');
+    //   ctx.drawImage(img, data [rollno]["x"], data [rollno]["y"], data [rollno]["w"], data [rollno]["h"]);
+    // }
+
     // print (rollno)
     d = document.getElementById (rollno)
     // print (d)

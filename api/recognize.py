@@ -5,6 +5,7 @@ import sys
 import cgi
 args = []
 
+import json
 import cgitb
 cgitb.enable()
 form = cgi.FieldStorage()
@@ -105,7 +106,14 @@ for face in d:
                 n = name.split ("/")[-1]
                 print (n)
                 rollno = data [n]
-                students [rollno] = 100 - round ((probability) * 100, 2)
+                # students [rollno] = 100 - round ((probability) * 100, 2)
+                students [rollno] = dict ()
+                students [rollno]["probability"] = 100 - round ((probability) * 100, 2)
+                students [rollno]["x"] = x
+                students [rollno]["y"] = y
+                students [rollno]["w"] = w
+                students [rollno]["h"] = h
+                students [rollno] = json.dumps (students [rollno], default = str)
                 draw.rectangle ([x, y - 40, x + w, y], "white", color, 1)
                 draw.text((x + 5, y - 35), rollno, font=fnt, fill=color)
                 draw.rectangle ([x, y + h, x + w, y + h + 40], "white", color, 1)
@@ -135,6 +143,5 @@ print (f"<img src='{image}-detect'>")
 print ("__CUT_HERE__")
 print ("__CUT_HERE__")
 # print ('{"response": 200}')
-import json
 print (json.dumps (students))
 print ("__CUT_HERE__")
