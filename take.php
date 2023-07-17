@@ -115,6 +115,7 @@ if ($_FILES ["image"] != null) {
     <thead>
       <th>S. No</th>
       <th>Photo</th>
+      <th></th>
       <th>Name</th>
       <th>University Roll No</th>
       <th>Class Roll No</th>
@@ -139,7 +140,8 @@ if ($_FILES ["image"] != null) {
         echo "<tr>" ;
         echo "<td>$counter</td>";
         $rollno = $row ['rollno'];
-        echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ><canvas width='150' height='150' id='$rollno-c'></canvas></td>" ;
+        echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
+        echo "<td><div><canvas width='150' height='150' id='$rollno-c'></canvas><div class='d-none input-group'><input type='text' class='form-control' placeholder='Uni Roll No'/><button onclick='savePhoto (\"$row ['rollno']\")' class='btn btn-primary'><i class='fas fa-save'></i></button></div></div></td>";
         foreach (["name", "rollno", "crollno"] as $tag)
           echo "<td>" . $row [$tag] . "</td>" ;
         print ("<td><select class='form-select' id='$rollno'><option></option>");
@@ -190,6 +192,7 @@ function detect_cb (data) {
       jdata = JSON.parse (data [rollno])
       const canvas = document.getElementById(rollno + '-c');
       if (canvas != null) {
+        canvas.parentElement.children [1].classList.remove ("d-none")
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img_, jdata ["x"], jdata ["y"], jdata ["w"], jdata ["h"],0,0,150,150);
         // console.log (rollno + "-c")
@@ -229,5 +232,20 @@ function detect_faces (recognize) {
     do_post ("/api/detect.py", "img-data", detect_cb)
   else
     do_post ("/api/recognize.py", "img-data", detect_cb)
+}
+
+function savePhoto (rollno) {
+  dataURL = document.getElementById (rollno + "-c").toDataURL ()
+  $.ajax({
+      type: "POST",
+      url: "/api/add_photo.php",
+      data: { 
+         imgBase64: dataURL
+      }
+    }).done(function(o) {
+      console.log('saved'); 
+
+    });
+
 }
 </script>
