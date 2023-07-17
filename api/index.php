@@ -50,6 +50,10 @@ $RETVAL = false ;
 $deleted_students = [] ;
 echo "----| DEBUG [$query : $table]" ;
 switch ($query) {
+  case "add-photo":
+    var_dump ($_POST) ;
+    die () ;
+    break ;
   case "take":
     $semester = $_POST ["semester"];
     // die ($semester);

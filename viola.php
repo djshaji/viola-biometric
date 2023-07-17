@@ -72,13 +72,15 @@ function do_post (url, element, callback = null) {
 
   data = {}
   console.log (`using element ${element}`)
-  for (tag of ["select", "input"]) {
+  for (tag of ["select", "input", "canvas"]) {
     d = document.getElementById (element).getElementsByTagName (tag)
   //  console.log (d)
     for (e of d) {
       if (e.id == "")
         continue
-//      console.log (e, e.value)
+     console.log (e, e.value)
+      if (e.getAttribute ("type") == "canvas")
+        data [e.id] = e.toDataURL ()
       if (e.type == "checkbox")
         data [e.id] = e.checked
       else

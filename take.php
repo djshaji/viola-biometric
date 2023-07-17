@@ -141,7 +141,17 @@ if ($_FILES ["image"] != null) {
         echo "<td>$counter</td>";
         $rollno = $row ['rollno'];
         echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
-        echo "<td><div><canvas width='150' height='150' id='$rollno-c'></canvas><div class='d-none input-group'><input type='text' class='form-control' placeholder='Uni Roll No'/><button onclick='savePhoto (\"$row ['rollno']\")' class='btn btn-primary'><i class='fas fa-save'></i></button></div></div></td>";
+        // echo "<td><div class='card'><canvas width='150' height='150' id='$rollno-c'></canvas><button onclick='addPhotoDialog (\"$data-bs-toggle='modal' data-rollno='$rollno' data-bs-target='#add-photo' class='btn btn-sm btn-primary'>Add Photo</button></div></td>";
+        ?>
+        <td>
+          <div class="card d-none">
+            <canvas width="150" height="150" id="<?=$rollno?>-c"></canvas>
+            <button data-bs-toggle="modal" data-bs-target="#add-photo" onclick="savePhotoDialog ('<?=$rollno?>')" class="btn btn-primary btn-sm">
+              Add photo
+            </button>
+          </div>
+        </td>
+        <?php
         foreach (["name", "rollno", "crollno"] as $tag)
           echo "<td>" . $row [$tag] . "</td>" ;
         print ("<td><select class='form-select' id='$rollno'><option></option>");
@@ -192,7 +202,7 @@ function detect_cb (data) {
       jdata = JSON.parse (data [rollno])
       const canvas = document.getElementById(rollno + '-c');
       if (canvas != null) {
-        canvas.parentElement.children [1].classList.remove ("d-none")
+        canvas.parentElement.classList.remove ("d-none")
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img_, jdata ["x"], jdata ["y"], jdata ["w"], jdata ["h"],0,0,150,150);
         // console.log (rollno + "-c")
@@ -234,6 +244,31 @@ function detect_faces (recognize) {
     do_post ("/api/recognize.py", "img-data", detect_cb)
 }
 
+function cloneCanvas(oldCanvas) {
+  oldCanvas = document.getElementById (oldCanvas)
+  //create a new canvas
+  var newCanvas = document.createElement('canvas');
+  var context = newCanvas.getContext('2d');
+
+  //set dimensions
+  newCanvas.width = oldCanvas.width;
+  newCanvas.height = oldCanvas.height;
+
+  //apply the old canvas to the new one
+  context.drawImage(oldCanvas, 0, 0);
+
+  //return the new canvas
+  return newCanvas;
+}
+
+function savePhotoDialog (rollno) {
+  c = cloneCanvas (rollno + "-c")
+  c.setAttribute ("type", "canvas")
+  apc = document.getElementById ("apc")
+  apc.innerHTML = ""
+  apc.appendChild (c)
+}
+
 function savePhoto (rollno) {
   dataURL = document.getElementById (rollno + "-c").toDataURL ()
   $.ajax({
@@ -249,3 +284,29 @@ function savePhoto (rollno) {
 
 }
 </script>
+
+<!-- Modal -->
+<div class="modal fade" id="add-photo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add photo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body justify-content-center" id="add-photo-body">
+        <div id="apc"></div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+          <label for="floatingInput">University Roll No</label>
+        </div>
+        <input type="hidden" value="add-photo" id="query">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button onclick="do_post ('/api/index.php', 'add-photo')" type="button" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save</button>
+        <?php spinner () ;checkmark () ; failed ();?>   
+      </div>
+    </div>
+  </div>
+</div>
