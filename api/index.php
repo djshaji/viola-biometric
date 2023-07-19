@@ -51,8 +51,47 @@ $deleted_students = [] ;
 echo "----| DEBUG [$query : $table]" ;
 switch ($query) {
   case "add-photo":
-    var_dump ($_POST) ;
-    die () ;
+    // var_dump ($_POST) ;
+    $sql = "SELECT photo from students where rollno = :rollno" ;
+    $_ = $db -> prepare ($sql);
+    $_ -> execute (array (
+      "rollno"=> $_POST ["rollno"]
+    )) ;
+    $_ = $_ -> fetch () ;
+    $_rollno_ = $_POST ["rollno"] ;
+    print ("<script>rollno = '$_rollno_'</script>") ;
+
+    if ($_ === false) { 
+      echo "__CUT_HERE__" ;
+      echo json_encode (array (
+        "response"=> 300,
+        "message"=> "No such student"
+      )) ;
+      die ();
+    }
+
+    $autoid = intval ($_POST ["autoid"]) ;
+    $photo = explode ("/Photo/", $_ ["photo"])[1];
+    $path = "classes/$uid/$autoid/faces/$photo/$uid/$photo";
+    mkdir ("classes/$uid/$autoid/faces/$photo/$uid/", 0777, true);
+    $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $_POST ["photo"]));
+
+    file_put_contents ($path, $data) ;
+    // var_dump ($path);
+    echo "__CUT_HERE__" ;
+    if (file_exists ($path)) {
+      // $ext = explode ("/", mime_content_type ($path)) [1];
+      // $_path = $path . "." . $ext ;
+      // if (! rename ($path, $_path))
+      //   print ("unable to move file");
+      $ex = exec ("rm -v classes/$uid/$autoid/faces/representations_vgg_face.pkl");
+      die (json_encode (array ("response"=> 200, "message"=> $ex))) ;
+    }
+    else {
+      die (json_encode (array ("response"=> 400, "message"=>error_get_last ()))) ;
+    }
+
+    die();
     break ;
   case "take":
     $semester = $_POST ["semester"];

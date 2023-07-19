@@ -22,11 +22,14 @@ foreach ($data as $row) {
     $autoid = $_POST["autoid"] ;
     $new_dir = "/var/www/viola/classes/$uid/$autoid/faces/$photo" ;
     if (! file_exists (dirname ($new_dir)))
-      mkdir (dirname ($new_dir)) ;
+      mkdir (dirname ($new_dir), 0777, true) ;
     if (!symlink ($folder, $new_dir)) {
       var_dump (error_get_last ());
       // die ("{'response': '502','message': 'cannot make symlink'}") ;
     }
   }
 }
+
+exec ("rm -v /var/www/viola/classes/$uid/$autoid/faces/representations_vgg_face.pkl");
+
 ?>

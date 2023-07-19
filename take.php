@@ -264,6 +264,7 @@ function cloneCanvas(oldCanvas) {
 function savePhotoDialog (rollno) {
   c = cloneCanvas (rollno + "-c")
   c.setAttribute ("type", "canvas")
+  c.id = "photo"
   apc = document.getElementById ("apc")
   apc.innerHTML = ""
   apc.appendChild (c)
@@ -296,10 +297,11 @@ function savePhoto (rollno) {
       <div class="modal-body justify-content-center" id="add-photo-body">
         <div id="apc"></div>
         <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">University Roll No</label>
+          <input type="text" class="form-control" id="rollno" placeholder="name@example.com">
+          <label for="rollno">University Roll No</label>
         </div>
         <input type="hidden" value="add-photo" id="query">
+        <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
 
       </div>
       <div class="modal-footer">

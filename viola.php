@@ -72,19 +72,25 @@ function do_post (url, element, callback = null) {
 
   data = {}
   console.log (`using element ${element}`)
-  for (tag of ["select", "input", "canvas"]) {
+  for (tag of ["select", "input"]) {
     d = document.getElementById (element).getElementsByTagName (tag)
   //  console.log (d)
     for (e of d) {
       if (e.id == "")
         continue
-     console.log (e, e.value)
-      if (e.getAttribute ("type") == "canvas")
-        data [e.id] = e.toDataURL ()
+    //  console.log (e, e.value)
       if (e.type == "checkbox")
         data [e.id] = e.checked
       else
         data [e.id] = e.value
+    }
+  }
+
+  if (data ["query"] == "add-photo") {
+    d = document.getElementById (element).getElementsByTagName ("canvas")[0]
+    if (d != null) {
+      console.log (d)
+      data [d.id] = d.toDataURL ()
     }
   }
 
