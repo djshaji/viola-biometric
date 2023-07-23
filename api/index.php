@@ -100,8 +100,14 @@ switch ($query) {
     foreach ($_POST as $key=>$val) {
       // var_dump ($key/100000000) ;
       // die ($key);
+      /*
       if (intval (intval ($key) / 100000000) == 4) {
         $attendance [$key] = $val ;
+        unset ($_POST [$key]);
+      }
+      */
+      if (str_starts_with ($key, "s-")) {
+        $attendance [explode ("s-", $key)[1]] = $val ;
         unset ($_POST [$key]);
       }
     }

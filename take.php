@@ -154,7 +154,7 @@ if ($_FILES ["image"] != null) {
         <?php
         foreach (["name", "rollno", "crollno"] as $tag)
           echo "<td>" . $row [$tag] . "</td>" ;
-        print ("<td><select class='form-select' id='$rollno'><option></option>");
+        print ("<td><select class='form-select' id='s-$rollno'><option></option>");
         foreach ($att_values as $a) {
           $option = $a [0];
           echo "<option value='$option'>$a</option>";
