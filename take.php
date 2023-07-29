@@ -19,9 +19,13 @@ include "anneli/db.php" ;
 include "viola.php";
 require_login ();
 $classid = $_GET["id"] ;
-$sql = "SELECT * from classes where uid = '$uid' and autoid = '" . $classid . "'";
+$sql = "SELECT * from classes where uid = :uid and autoid = :autoid";
 $res = $db -> prepare ($sql) ;
-$res -> execute () ;
+$res -> execute (array (
+  "uid"=>$uid,
+  "autoid"=> $_GET ["id"]
+)) ;
+
 $course_info = $res -> fetch ();
 // var_dump ($course_info);
 $_sql = "SELECT * from students where rollno like :rollno" ;

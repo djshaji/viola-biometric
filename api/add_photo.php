@@ -12,3 +12,8 @@ if ($uid == null) {
   api_return (null, 403);
 }
 
+?>
+
+<?php
+include "anneli/footer.php";
+?>

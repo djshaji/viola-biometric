@@ -119,7 +119,7 @@ function do_post (url, element, callback = null) {
   console.log (data)
   $.post (url, data, function (result, status) {
     console.log (result)
-    document.getElementById ("console-body").innerHTML = result
+    // document.getElementById ("console-body").innerHTML = result
 //    $("console").modal ("show")
     r = result.split ("__CUT_HERE__")[2]
     console.log (`${status}: ${r}`)
