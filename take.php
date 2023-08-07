@@ -27,6 +27,7 @@ $res -> execute (array (
 )) ;
 
 $course_info = $res -> fetch ();
+print ("<script>course_info = " . json_encode ($course_info) . "</script>");
 // var_dump ($course_info);
 $_sql = "SELECT * from students where rollno like :rollno order by crollno" ;
 $_data = array ("rollno"=>$course_info ["semester"] . "%") ;
@@ -317,3 +318,14 @@ function savePhoto (rollno) {
     </div>
   </div>
 </div>
+<script>
+citem = document.createElement ("li")
+citem.innerHTML = `
+  <a class='nav-link fw-bold' href='/class.php?id=${course_info ["autoid"]}'>
+    <i class="fas fa-chevron-left"></i>
+    Back to ${course_info ["name"]}
+  </a>
+` ;
+document.getElementById ("navigation").prepend (citem)
+
+</script>

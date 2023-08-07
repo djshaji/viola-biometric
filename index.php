@@ -7,6 +7,23 @@ include "config.php";
 include "anneli/header.php" ;
 include "anneli/db.php" ;
 include "viola.php";
+if ($uid == null) {
+?>
+
+<div class="row justify-content-center m-4">
+  <div class="col-md-3 h1 text-center text-primary">
+    <i class="fas fa-fingerprint"></i>
+    saक्षam
+  </div>
+  <div class="col-md-6">
+    <?php require_login ();?>
+  </div>
+</div>
+<?php
+  include "anneli/footer.php" ;
+  die ();
+}
+
 $sql = "SELECT * from classes where uid = '$uid'" ;
 $res = $db -> prepare ($sql) ;
 $res -> execute () ;
