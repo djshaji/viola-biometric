@@ -140,7 +140,13 @@ function do_post (url, element, callback = null) {
             //   location.reload ()
           })      
       } else {
-        callback (r) ;
+        // Swal.fire(
+        //     'Ok',
+        //     'Data added successfully',
+        //     'success'
+        //   ).then(() => {
+              callback (r) ;
+          // })
       }
       
       document.getElementsByClassName ("check")[0].classList.remove ("d-none")
@@ -159,6 +165,10 @@ function do_post (url, element, callback = null) {
 
 function pic (url) {
   return url.replace ("http://", "/photos/")
+}
+
+function reload (data = null) {
+  location.reload()
 }
 
 </script>

@@ -2,8 +2,11 @@
 $rollno = null ;
 foreach ($students as $student => $val) {
   var_dump ($student);
-  $rollno = intval ($student / 100000000 );
-  break ;
+  // $rollno = intval ($student / 100000000 );
+  $rollno = strval ($student) [0] ;
+  print ("-| $rollno |-") ;
+  if ($rollno != null && $rollno != "")
+    break ;
 }
 
 $_sql = "SELECT * from students where rollno like :rollno" ;

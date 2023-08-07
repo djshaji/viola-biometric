@@ -28,7 +28,7 @@ $res -> execute (array (
 
 $course_info = $res -> fetch ();
 // var_dump ($course_info);
-$_sql = "SELECT * from students where rollno like :rollno" ;
+$_sql = "SELECT * from students where rollno like :rollno order by crollno" ;
 $_data = array ("rollno"=>$course_info ["semester"] . "%") ;
 $sql = $db -> prepare ($_sql);
 if (!$sql -> execute ($_data))
@@ -231,7 +231,7 @@ function detect_cb (data) {
     // }
 
     // print (rollno)
-    d = document.getElementById (rollno)
+    d = document.getElementById ("s-" + rollno)
     // print (d)
     if (d != null) {
       d.value = "P"

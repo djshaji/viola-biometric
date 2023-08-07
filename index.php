@@ -31,9 +31,9 @@ $all_courses = json_decode ($all_courses, true);
     <?php
       foreach ($res as $row) {
         echo "<tr>" ;
-        echo "<td><a class='nav-link' href='/class?id=" . $row ["autoid"]. "'>" . $row["name"] . "</td>" ;
+        echo "<td><a class='nav-link' href='/class.php?id=" . $row ["autoid"]. "'>" . $row["name"] . "</td>" ;
         echo "<td class='justify-content-end d-flex'><a class='m-2 btn btn-primary' href='/class.php?id=" . $row ["autoid"] . "'><i class='fas fa-folder-open me-2'></i>View</a>" ;
-        echo "<button class='btn btn-danger m-2' onclick='do_post (\"/api/index.php\", \"remove-".$row["autoid"]."\");'><i class='fas fa-trash me-2'></i>Delete this class</button></td>" ;
+        echo "<button class='btn btn-danger m-2' onclick='do_post (\"/api/index.php\", \"remove-".$row["autoid"]."\",reload);'><i class='fas fa-trash me-2'></i>Delete this class</button></td>" ;
         echo "<div id='remove-".$row["autoid"]. "'>" .
           "<input type='hidden' id='autoid' value='".$row["autoid"]."'>".
           "<input type='hidden' id='table' value='classes'>" .
@@ -103,7 +103,7 @@ include "anneli/footer.php";
         <input type="hidden" id="query" value="insert">
         <input type="hidden" id="script" value="create_class">
         <button id="close-dialog" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button onclick="do_post ('/api/index.php', 'add_class')" type="button" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Add Class</button>
+        <button onclick="do_post ('/api/index.php', 'add_class', reload)" type="button" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Add Class</button>
         <?php spinner () ;checkmark () ; failed ();?>
       </div>
     </div>
