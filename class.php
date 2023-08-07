@@ -104,6 +104,7 @@ include "anneli/footer.php" ;
             <select onclick="sem_select (this)" class="form-select" aria-label="Default select example">
               <option value=""></option>
               <option value="2">2</option>
+              <option value="3">3</option>
               <option value="4">4</option>
               <option value="6">6</option>
             </select>

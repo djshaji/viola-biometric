@@ -72,6 +72,7 @@ include "anneli/footer.php";
           <select onchange="sem_select (this)" id="semester" class="form-select">
             <option></option>
             <option>2</option>
+            <option>3</option>
             <option>4</option>
             <option>6</option>
           </select>
@@ -85,7 +86,11 @@ include "anneli/footer.php";
         <div class="col-3">
           <label for="">Section</label>
           <select id="section" class="form-select">
-            <option>A</option>
+            <?php
+            foreach (range('A', 'Z') as $i) {
+              print ("<option>$i</option>");
+            }
+            ?>
           </select>
         </div>
         <div class="col-12 mt-4">
