@@ -135,6 +135,7 @@ if ($_FILES ["image"] != null) {
       <input type="hidden" value="<?php echo $course_info ["name"] ;?>" id="name">
       <input type="hidden" value="<?php echo $course_info ["course"] ;?>" id="course">
       <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
+      <input type="hidden" id="photo" value="<?php echo $img ;?>">
 
       <?php foreach ($data as $row) {
 //        var_dump ($students [$row ["rollno"]]) ;

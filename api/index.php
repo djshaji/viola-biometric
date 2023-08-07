@@ -73,7 +73,10 @@ switch ($query) {
     $autoid = intval ($_POST ["autoid"]) ;
     $photo = explode ("/Photo/", $_ ["photo"])[1];
     $path = "classes/$uid/$autoid/faces/$photo/$uid/$photo";
-    mkdir ("classes/$uid/$autoid/faces/$photo/$uid/", 0777, true);
+    if (!mkdir ("classes/$uid/$autoid/faces/$photo/$uid/", 0777, true)) {
+      var_dump (error_get_last ());
+      die (json_encode (array("response"=>"405: ". error_get_last ()['message'])));
+    }
     $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $_POST ["photo"]));
 
     file_put_contents ($path, $data) ;
@@ -115,7 +118,7 @@ switch ($query) {
     $_POST ["students"] = json_encode ($attendance) ;
     $_POST ["cid"] = $_POST ["autoid"] ;
     unset ($_POST ["autoid"]);
-    $cols = ["uid", "course", "name", "semester", "section", "students", "cid", "date"];
+    $cols = ["uid", "course", "name", "semester", "section", "students", "cid", "date", "photo"];
     $s = "uid";
     $v = ":uid";
     foreach ($cols as $c) {
