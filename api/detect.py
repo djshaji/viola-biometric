@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3.11
 print("Content-Type: text/html")
 print()
 import cgi

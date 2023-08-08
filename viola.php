@@ -62,10 +62,10 @@ function api_return ($data, $code) {
 ?>
 
 <script>
-ui = document.getElementById
-uic = document.getElementsByClassName
+// ui = document.getElementById
+// uic = document.getElementsByClassName
 
-function do_post (url, element, callback = null) {
+function do_post (url, element, callback = null, confirmation = false) {
   document.getElementsByClassName ("spinner")[0].classList.remove ("d-none")
   document.getElementsByClassName ("check")[0].classList.add ("d-none")
   document.getElementsByClassName ("failed")[0].classList.add ("d-none")
@@ -140,13 +140,17 @@ function do_post (url, element, callback = null) {
             //   location.reload ()
           })      
       } else {
-        // Swal.fire(
-        //     'Ok',
-        //     'Data added successfully',
-        //     'success'
-        //   ).then(() => {
-              callback (r) ;
-          // })
+          if (! confirmation)
+            callback (r) ;
+          else {
+            Swal.fire(
+                'Ok',
+                'Data added successfully',
+                'success'
+              ).then(() => {
+                callback (r) ;
+            })
+          }
       }
       
       document.getElementsByClassName ("check")[0].classList.remove ("d-none")

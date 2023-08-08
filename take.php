@@ -173,7 +173,7 @@ if ($_FILES ["image"] != null) {
   </table>
 
   <div class="card-footer text-muted justify-content-center d-flex">
-    <button class="m-2 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body')"><i class="fas fa-save me-2"></i>Save</button>
+    <button class="m-2 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body',function (a){location.href=`/view.php?id=${course_info['autoid']}`}, true)"><i class="fas fa-save me-2"></i>Save</button>
     <div class="p-3">
       <?php spinner () ;checkmark () ; failed ();?>   
     </div>
