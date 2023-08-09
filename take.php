@@ -80,20 +80,11 @@ if ($_FILES ["image"] != null) {
     </div>
   <?php } ?>
   <div class="row m-4 p-4 shadow justify-content-center">
-    <div class="col-12 mb-3 justify-content-center  d-flex">
-      <label for="" class="h3 align-self-center">
-        <i class="fas fa-calendar-check me-2"></i>
-        <?php $date = date ("r", time()) ; echo explode ("+", $date) [0];?>
-      </label>
-      <button class="ms-3 m-1 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body')"><i class="fas fa-save me-2"></i>Save</button>
-    </div>
-
     <div class="col-4">
       <form class="input-group" method="post" enctype="multipart/form-data" action="/take.php?id=<?php echo $_GET["id"] ;?>">
         <input name="image" type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
         <button type="submit" class="btn btn-primary" type="button" id="inputGroupFileAddon04"><i class="fas fa-camera me-2"></i>Upload</button>
       </form>
-
     </div>
 
     <div class="form-group col-2">
@@ -113,6 +104,21 @@ if ($_FILES ["image"] != null) {
       </button>
 
     </div>
+
+
+    <div class="col-md-4 mb-3 justify-content-center  d-flex">
+      <div class="form-floating">
+        <input onchange="update_date (this)" type="datetime-local" name="date" id="datex" class="form-control">
+        <label for="" class="align-self-center">
+          <i class="fas fa-calendar-check me-2"></i>
+          <!-- <?php $date = date ("r", time()) ; echo explode ("+", $date) [0];?> -->
+          Select Date
+        </label>
+
+      </div>
+      <button class="ms-3 m-1 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body',function (a){location.href=`/view.php?id=${course_info['autoid']}`}, true)"><i class="fas fa-save me-2"></i>Save</button>
+    </div>
+
   </div>
 </div>
 <div class="section m-3 p-3 shadow">
@@ -319,6 +325,11 @@ function savePhoto (rollno) {
   </div>
 </div>
 <script>
+
+function update_date (el) {
+  document.getElementById ("date").value = el.value
+}
+
 citem = document.createElement ("li")
 citem.innerHTML = `
   <a class='nav-link fw-bold' href='/class.php?id=${course_info ["autoid"]}'>

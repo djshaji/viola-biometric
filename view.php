@@ -59,6 +59,7 @@ foreach ($data as $d) {
           $d .= "</span>";
           // $d = explode (date ("Y", time ()), $d) [0];
           // echo "<th class='mdl-button' style='position:relativea;left:-100;top:-100;transforma: rotate(-90deg);'>". $d ."</th>";
+          $d = str_replace ("T", "<br>", $_d);
           echo "<td class='fs-6'><a href='$photo' class='nav-link'>$d</a></td>";
         }
         ?>
