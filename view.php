@@ -43,7 +43,7 @@ foreach ($data as $d) {
 // var_dump ($dates);
 ?>
 
-<section class="container m-3 shadow">
+<section class="m-3 shadow">
   <div class="alert alert-primary h3"><?php echo $data [0]["name"] . " [". $total_days . " days]"; ?></div>
   <div class="table-responsive">
     <table class="table table-bordered">

@@ -1,7 +1,7 @@
 <?php
 //phpinfo () ;die () ;
 
-//ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);
+// ini_set('display_errors', '1');ini_set('display_startup_errors', '1');error_reporting(E_ALL);
 //ini_set ("upload_tmp_dir", "/var/www/viola/files");
 require ("vendor/autoload.php");
 $att_values = [
@@ -59,7 +59,26 @@ if ($_FILES ["image"] != null) {
     // print ("<div class='alert alert-info'>$img</div>");
   }
 }
+
+// temporary hack for checking who has uploaded photo
+
+$db2 = new PDO ("mysql:host=localhost;dbname=nep;charset=utf8mb4", "viola", "jennahaze");
+$db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+
+$_sql = "SELECT * from nep where semester = :semester and rollno is not null" ;
+$_data = array ("semester"=>$course_info ["semester"]) ;
+$sql = $db2 -> prepare ($_sql);
+$sql -> execute ($_data);
+$newdata = $sql -> fetchAll () ;
+$newc = array () ;
+foreach ($newdata as $row) {
+  $newc [$row ["rollno"]] = $row ['newphoto'];
+}
 ?>
+<script>
+rollnos = []
+data = {}
+</script>
 <h3 class="alert alert-primary">
   Semester <?php echo $course_info ["semester"] . " ". $course_info ["name"] . " " . $course_info ["course"] . " Section " . $course_info ["section"];?>
 </h3>
@@ -80,14 +99,14 @@ if ($_FILES ["image"] != null) {
     </div>
   <?php } ?>
   <div class="row m-4 p-4 shadow justify-content-center">
-    <div class="col-4">
+    <div class="col-md-4">
       <form class="input-group" method="post" enctype="multipart/form-data" action="/take.php?id=<?php echo $_GET["id"] ;?>">
         <input name="image" type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
         <button type="submit" class="btn btn-primary" type="button" id="inputGroupFileAddon04"><i class="fas fa-camera me-2"></i>Upload</button>
       </form>
     </div>
 
-    <div class="form-group col-2">
+    <div class="form-group col-4 col-md-2">
       <!-- <label class="text-muted" >Mark all as</label> -->
       <select class="form-select" id="mark-all">
         <?php foreach ($att_values as $a) {
@@ -97,10 +116,15 @@ if ($_FILES ["image"] != null) {
         ?>
       </select>
     </div>
-    <div class="col-2">
+    <div class="col-md-2 col-4">
       <button class="btn btn-success" onclick="mark_all ()">
         <i class="fas fa-edit me-2"></i>
-        Mark All
+        <!-- Mark All -->
+      </button>
+
+      <button onclick="manual_rollno = -1 ; manual_next ()"  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#manual">
+        <i class="fas fa-mouse me-2"></i>
+        <!-- Manual -->
       </button>
 
     </div>
@@ -108,15 +132,18 @@ if ($_FILES ["image"] != null) {
 
     <div class="col-md-4 mb-3 justify-content-center  d-flex">
       <div class="form-floating">
-        <input onchange="update_date (this)" type="datetime-local" name="date" id="datex" class="form-control">
+        <input required onchange="update_date (this)" type="datetime-local" name="date" id="datex" class="form-control" value="<?= explode ("+", date ("c"))[0]?>">
         <label for="" class="align-self-center">
           <i class="fas fa-calendar-check me-2"></i>
-          <!-- <?php $date = date ("r", time()) ; echo explode ("+", $date) [0];?> -->
+          <!-- <?php $date = date ("c", time()) ; echo explode ("+", $date) [0];?> -->
           Select Date
         </label>
 
       </div>
-      <button class="ms-3 m-1 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body',function (a){location.href=`/view.php?id=${course_info['autoid']}`}, true)"><i class="fas fa-save me-2"></i>Save</button>
+      <div>
+        <button class="ms-3 m-1 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body',function (a){location.href=`/view.php?id=${course_info['autoid']}`}, true)"><i class="fas fa-save me-2"></i>Save</button>
+
+      </div>
     </div>
 
   </div>
@@ -152,6 +179,14 @@ if ($_FILES ["image"] != null) {
         echo "<tr>" ;
         echo "<td>$counter</td>";
         $rollno = $row ['rollno'];
+        print ("<script>rollnos.push ('$rollno');</script>");
+        $row ["newphoto"] = $newc [$row ["crollno"]] ;
+        $j = json_encode ($row) ;
+        print (
+          "<script>
+            data [$rollno] = $j;
+          </script>"
+        ) ;
         echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
         // echo "<td><div class='card'><canvas width='150' height='150' id='$rollno-c'></canvas><button onclick='addPhotoDialog (\"$data-bs-toggle='modal' data-rollno='$rollno' data-bs-target='#add-photo' class='btn btn-sm btn-primary'>Add Photo</button></div></td>";
         ?>
@@ -339,4 +374,59 @@ citem.innerHTML = `
 ` ;
 document.getElementById ("navigation").prepend (citem)
 
+</script>
+
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="manual" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Tap Attendance&nbsp;&nbsp;<label id="counter"></label></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h1 class="text-center" id="manual-rollno"></h1>
+            <img class="img-fluid" src="" alt="" id="manual-img">
+            <img class="img-fluid" src="" alt="" id="manual-img-new">
+          </div>
+          <div class="row fw-bold col-md-5 m-2">
+            <button onclick="manual_mark ('P')" class="btn btn-primary m-4">
+              <i class="fas fa-user me-2"></i> Present
+            </button>
+            <button class="btn btn-danger m-4" onclick="manual_mark ('A')" >
+              <i class="fas fa-user-slash me-2"></i> Absent
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+manual_rollno = 0
+function manual_next () {
+  _index = rollnos.indexOf (manual_rollno)
+  ui ("counter").innerText = `${_index + 2} / ${rollnos.length}`
+  manual_rollno = rollnos [_index + 1]
+  if (typeof (manual_rollno) == "undefined") {
+    $("#manual").modal ("hide")
+      return
+  }
+
+  ui ('manual-img').src = data [manual_rollno]["photo"]
+  ui ('manual-img-new').src = data [manual_rollno]["newphoto"]
+  ui ('manual-rollno').innerText = data [manual_rollno]["rollno"]
+}
+
+function manual_mark (status) {
+  ui ("s-" + manual_rollno).value = status
+  manual_next ()
+}
 </script>
