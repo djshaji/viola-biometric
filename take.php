@@ -149,69 +149,72 @@ data = {}
   </div>
 </div>
 <div class="section m-3 p-3 shadow">
-  <table class="table">
-    <thead>
-      <th>S. No</th>
-      <th>Photo</th>
-      <th></th>
-      <th>Name</th>
-      <th>University Roll No</th>
-      <th>Class Roll No</th>
-      <th>
-      </th>
-    </thead>
-    <tbody id='my-body'>
-      <input type="hidden" value="take" id="query">
-      <input type="hidden" value="attendance" id="table">
-      <input type="hidden" value="<?php echo $date;?>" id="date">
-      <input type="hidden" value="<?php echo $course_info ["semester"] ;?>" id="semester">
-      <input type="hidden" value="<?php echo $course_info ["section"] ;?>" id="section">
-      <input type="hidden" value="<?php echo $course_info ["name"] ;?>" id="name">
-      <input type="hidden" value="<?php echo $course_info ["course"] ;?>" id="course">
-      <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
-      <input type="hidden" id="photo" value="<?php echo $img ;?>">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <th>S. No</th>
+        <th>Photo</th>
+        <th></th>
+        <th>Name</th>
+        <th>University Roll No</th>
+        <th>Class Roll No</th>
+        <th>
+        </th>
+      </thead>
+      <tbody id='my-body'>
+        <input type="hidden" value="take" id="query">
+        <input type="hidden" value="attendance" id="table">
+        <input type="hidden" value="<?php echo $date;?>" id="date">
+        <input type="hidden" value="<?php echo $course_info ["semester"] ;?>" id="semester">
+        <input type="hidden" value="<?php echo $course_info ["section"] ;?>" id="section">
+        <input type="hidden" value="<?php echo $course_info ["name"] ;?>" id="name">
+        <input type="hidden" value="<?php echo $course_info ["course"] ;?>" id="course">
+        <input type="hidden" value="<?php echo $course_info ["autoid"];?>" id="autoid">
+        <input type="hidden" id="photo" value="<?php echo $img ;?>">
 
-      <?php foreach ($data as $row) {
-//        var_dump ($students [$row ["rollno"]]) ;
-        if ($students [$row["rollno"]] == null)
-          continue ;
-          
-        echo "<tr>" ;
-        echo "<td>$counter</td>";
-        $rollno = $row ['rollno'];
-        print ("<script>rollnos.push ('$rollno');</script>");
-        $row ["newphoto"] = $newc [$row ["crollno"]] ;
-        $j = json_encode ($row) ;
-        print (
-          "<script>
-            data [$rollno] = $j;
-          </script>"
-        ) ;
-        echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
-        // echo "<td><div class='card'><canvas width='150' height='150' id='$rollno-c'></canvas><button onclick='addPhotoDialog (\"$data-bs-toggle='modal' data-rollno='$rollno' data-bs-target='#add-photo' class='btn btn-sm btn-primary'>Add Photo</button></div></td>";
-        ?>
-        <td>
-          <div class="card d-none">
-            <canvas width="150" height="150" id="<?=$rollno?>-c"></canvas>
-            <button data-bs-toggle="modal" data-bs-target="#add-photo" onclick="savePhotoDialog ('<?=$rollno?>')" class="btn btn-primary btn-sm">
-              Add photo
-            </button>
-          </div>
-        </td>
-        <?php
-        foreach (["name", "rollno", "crollno"] as $tag)
-          echo "<td>" . $row [$tag] . "</td>" ;
-        print ("<td><select class='form-select' id='s-$rollno'><option></option>");
-        foreach ($att_values as $a) {
-          $option = $a [0];
-          echo "<option value='$option'>$a</option>";
+        <?php foreach ($data as $row) {
+  //        var_dump ($students [$row ["rollno"]]) ;
+          if ($students [$row["rollno"]] == null)
+            continue ;
+            
+          echo "<tr>" ;
+          echo "<td>$counter</td>";
+          $rollno = $row ['rollno'];
+          print ("<script>rollnos.push ('$rollno');</script>");
+          $row ["newphoto"] = $newc [$row ["crollno"]] ;
+          $j = json_encode ($row) ;
+          print (
+            "<script>
+              data [$rollno] = $j;
+            </script>"
+          ) ;
+          echo "<td><img width='150' src='". pic ($row ["photo"])."' class='img-fluid' ></td>" ;
+          // echo "<td><div class='card'><canvas width='150' height='150' id='$rollno-c'></canvas><button onclick='addPhotoDialog (\"$data-bs-toggle='modal' data-rollno='$rollno' data-bs-target='#add-photo' class='btn btn-sm btn-primary'>Add Photo</button></div></td>";
+          ?>
+          <td>
+            <div class="card d-none">
+              <canvas width="150" height="150" id="<?=$rollno?>-c"></canvas>
+              <button data-bs-toggle="modal" data-bs-target="#add-photo" onclick="savePhotoDialog ('<?=$rollno?>')" class="btn btn-primary btn-sm">
+                Add photo
+              </button>
+            </div>
+          </td>
+          <?php
+          foreach (["name", "rollno", "crollno"] as $tag)
+            echo "<td>" . $row [$tag] . "</td>" ;
+          print ("<td><select class='form-select' id='s-$rollno'><option></option>");
+          foreach ($att_values as $a) {
+            $option = $a [0];
+            echo "<option value='$option'>$a</option>";
+          }
+          echo "</td></tr>";
+          $counter ++ ;
         }
-        echo "</td></tr>";
-        $counter ++ ;
-      }
-      ?>
-    </tbody>
-  </table>
+        ?>
+      </tbody>
+    </table>
+
+  </div>
 
   <div class="card-footer text-muted justify-content-center d-flex">
     <button class="m-2 btn btn-primary" onclick="do_post ('/api/index.php', 'my-body',function (a){location.href=`/view.php?id=${course_info['autoid']}`}, true)"><i class="fas fa-save me-2"></i>Save</button>
@@ -387,12 +390,12 @@ document.getElementById ("navigation").prepend (citem)
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-6">
             <h1 class="text-center" id="manual-rollno"></h1>
             <img class="img-fluid" src="" alt="" id="manual-img">
             <img class="img-fluid" src="" alt="" id="manual-img-new">
           </div>
-          <div class="row fw-bold col-md-5 m-2">
+          <div class="row fw-bold col-5 m-2">
             <button onclick="manual_mark ('P')" class="btn btn-primary m-4">
               <i class="fas fa-user me-2"></i> Present
             </button>
